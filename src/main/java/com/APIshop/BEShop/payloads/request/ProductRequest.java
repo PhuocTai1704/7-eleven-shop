@@ -19,18 +19,22 @@ public class ProductRequest {
     @NotBlank(message = "Tên sản phẩm không được để trống")
     private String productName;
 
+    @NotNull(message = "Giá sản phẩm không được để trống")
     @Positive(message = "Giá sản phẩm phải lớn hơn 0")
-    private double price;
+    private Double price;
 
+    @NotNull(message = "Số lượng không được để trống")
     @Min(value = 0, message = "Số lượng không được nhỏ hơn 0")
-    private int quantity;
+    private Integer quantity;
 
+    @NotNull(message = "Giảm giá không được để trống")
     @Min(value = 0, message = "Giảm giá tỷ lệ không được nhỏ hơn 0")
-    private int discount;
+    private Integer discount;
 
     @NotNull(message = "Trạng thái không được để trống")
     private Boolean status;
 
+    @NotBlank(message = "Mô tả sản phẩm không được để trống")
     @Size(min = 6, message = "Mô tả sản phẩm phải có ít nhất 6 ký tự")
     private String description;
 
