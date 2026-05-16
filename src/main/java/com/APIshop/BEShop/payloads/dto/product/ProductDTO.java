@@ -4,11 +4,6 @@ import java.time.LocalDateTime;
 
 import com.APIshop.BEShop.payloads.dto.category.CategoryDTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -37,7 +32,6 @@ public class ProductDTO {
     @Max(100)
     private int discount = 0;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean status;
 
     @NotBlank
