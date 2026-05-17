@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
