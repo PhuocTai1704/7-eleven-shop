@@ -1,6 +1,7 @@
 package com.APIshop.BEShop.config;
 
 import java.security.Principal;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class UserInfoConfig implements Principal {
 
     private String userId;
 
-    private String role;
+    private List<String> roles;
 
     @Override
     public String getName() {

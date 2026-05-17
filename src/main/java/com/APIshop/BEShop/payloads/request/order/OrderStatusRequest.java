@@ -1,7 +1,5 @@
 package com.APIshop.BEShop.payloads.request.order;
 
-import org.hibernate.annotations.NotFound;
-
 import com.APIshop.BEShop.enums.OrderStatus;
 
 import jakarta.validation.constraints.NotBlank;

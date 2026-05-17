@@ -3,15 +3,20 @@ package com.APIshop.BEShop.security;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.APIshop.BEShop.config.UserInfoConfig;
+import com.APIshop.BEShop.payloads.dto.user.RoleDTO;
 import com.APIshop.BEShop.payloads.dto.user.UserDTO;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -29,6 +34,18 @@ public class JWTUtil {
 
     @Value("${jwt_secret}")
     private String jwt_key;
+
+    public UserInfoConfig getCurrentUser() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth instanceof JwtAuthenticationToken jwtAuth) {
+            var jwt = jwtAuth.getToken();
+
+            return new UserInfoConfig(
+                    jwt.getClaimAsString("userId"),
+                    jwt.getClaimAsStringList("scope"));
+        }
+        return null;
+    }
 
     public String generateToken(UserDTO userDTO) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
@@ -77,13 +94,14 @@ public class JWTUtil {
         }
     }
 
-    private String buildScope(UserDTO userDTO) {
-        StringJoiner stringJoiner = new StringJoiner(" ");
-        if (!CollectionUtils.isEmpty(userDTO.getRoles())) {
-            userDTO.getRoles().forEach(s -> stringJoiner.add(s.getRoleName()));
+    private List<String> buildScope(UserDTO userDTO) {
+        if (CollectionUtils.isEmpty(userDTO.getRoles())) {
+            return Collections.emptyList();
         }
-        return stringJoiner.toString();
-
+        return userDTO.getRoles()
+                .stream()
+                .map(RoleDTO::getRoleName)
+                .collect(Collectors.toList());
     }
 
     public boolean validateToken(String token) throws JOSEException, ParseException {
@@ -103,8 +121,13 @@ public class JWTUtil {
         JWSObject jwsObject = JWSObject.parse(token);
         Map<String, Object> object = jwsObject.getPayload().toJSONObject();
         userInfoConfig.setUserId((String) object.get("userId"));
-        userInfoConfig.setRole((String) object.get("scope"));
-
+        Object scope = object.get("scope");
+        if (scope instanceof List<?> list) {
+            userInfoConfig.setRoles(list.stream()
+                    .filter(s -> s instanceof String)
+                    .map(s -> (String) s)
+                    .collect(Collectors.toList()));
+        }
         return userInfoConfig;
     }
 

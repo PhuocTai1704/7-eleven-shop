@@ -11,12 +11,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.APIshop.BEShop.config.UserInfoConfig;
 import com.APIshop.BEShop.entity.Order;
 import com.APIshop.BEShop.entity.OrderItem;
 import com.APIshop.BEShop.entity.Payment;
@@ -60,10 +58,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO getById(String orderId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String userId = jwt.getClaim("userId");
-        String roles = jwt.getClaim("scope");
+        UserInfoConfig userInfoConfig = jwtUtil.getCurrentUser();
+        String userId = userInfoConfig.getUserId();
+        List<String> roles = userInfoConfig.getRoles();
 
         // Get order by orderId from database
         Order order = orderRepo.findById(orderId)
@@ -81,10 +78,9 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse getAllByUserId(OrderStatus status, String userId, Integer pageNumber, Integer pageSize,
             String sortBy,
             String sortOrder) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String Id = jwt.getClaim("userId");
-        String roles = jwt.getClaim("scope");
+        UserInfoConfig userInfoConfig = jwtUtil.getCurrentUser();
+        String Id = userInfoConfig.getUserId();
+        List<String> roles = userInfoConfig.getRoles();
 
         // Verify access permission
         if (!Id.equals(userId) && !roles.contains("ADMIN")) {
@@ -136,9 +132,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO create(OrderRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String userId = jwt.getClaim("userId");
+        UserInfoConfig userInfoConfig = jwtUtil.getCurrentUser();
+        String userId = userInfoConfig.getUserId();
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new APIException("Người dùng không tồn tại"));
@@ -206,10 +201,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO changeStatus(OrderStatusRequest orderStatusRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String userId = jwt.getClaim("userId");
-        String roles = jwt.getClaim("scope");
+        UserInfoConfig userInfoConfig = jwtUtil.getCurrentUser();
+        String userId = userInfoConfig.getUserId();
+        List<String> roles = userInfoConfig.getRoles();
 
         // Get order by orderId from database
         Order order = orderRepo.findById(orderStatusRequest.getOrderId())
