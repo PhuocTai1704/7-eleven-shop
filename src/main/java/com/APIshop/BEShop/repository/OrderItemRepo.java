@@ -8,4 +8,6 @@ import com.APIshop.BEShop.entity.OrderItem;
 @Repository
 public interface OrderItemRepo extends JpaRepository<OrderItem, Long> {
 
+    boolean existsByProduct_ProductId(String productId);
+
 }

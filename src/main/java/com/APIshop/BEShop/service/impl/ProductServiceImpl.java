@@ -23,6 +23,7 @@ import com.APIshop.BEShop.payloads.dto.product.ProductDTO;
 import com.APIshop.BEShop.payloads.request.ProductRequest;
 import com.APIshop.BEShop.payloads.response.ProductResponse;
 import com.APIshop.BEShop.repository.CategoryRepo;
+import com.APIshop.BEShop.repository.OrderItemRepo;
 import com.APIshop.BEShop.repository.ProductRepo;
 import com.APIshop.BEShop.service.FileService;
 import com.APIshop.BEShop.service.ProductService;
@@ -39,6 +40,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepo productRepo;
 
     private final CategoryRepo categoryRepo;
+
+    private final OrderItemRepo orderItemRepo;
 
     private final ModelMapper modelMapper;
 
@@ -156,8 +159,11 @@ public class ProductServiceImpl implements ProductService {
         if (!productRepo.existsById(productId)) {
             throw new ResourceNotFoundException("Sản phẩm", "Id", productId);
         }
-
-        productRepo.deleteById(productId);
+        if (orderItemRepo.existsByProduct_ProductId(productId)) {
+            productRepo.softDeleteById(productId);
+        } else {
+            productRepo.deleteById(productId);
+        }
     }
 
 }
