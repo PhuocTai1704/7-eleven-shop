@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.APIshop.BEShop.config.AppConstants;
+import com.APIshop.BEShop.config.UserInfoConfig;
 import com.APIshop.BEShop.entity.Role;
 import com.APIshop.BEShop.entity.User;
 import com.APIshop.BEShop.exceptions.APIException;
@@ -72,6 +73,15 @@ public class AuthServiceImpl implements AuthService {
         userRepo.save(user);
 
         return modelMapper.map(user, UserDTO.class);
+    }
+
+    @Override
+    public UserDTO getInfoByToken() {
+        UserInfoConfig user = jwtUtil.getCurrentUser();
+        User userInfo = userRepo.findById(user.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "userID", user.getUserId()));
+
+        return modelMapper.map(userInfo, UserDTO.class);
     }
 
     private void validateUserPassword(User user, RequestLogin requestLogin) {

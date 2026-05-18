@@ -9,4 +9,7 @@ public interface AuthService {
     ResponseLogin login(RequestLogin requestLogin);
 
     UserDTO register(RequestRegister requestRegister);
+
+    UserDTO getInfoByToken();
+
 }
