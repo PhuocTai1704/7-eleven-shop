@@ -154,10 +154,13 @@ public class OrderServiceImpl implements OrderService {
                 throw new APIException("Sản phẩm %s hiện không khả dụng".formatted(product.getProductName()));
             }
 
-            if (product.getQuantity() < itemRequest.getQuantity()) {
-                throw new APIException("Sản phẩm %s không đủ số lượng".formatted(product.getProductName()));
+            int affected = productRepo.decreaseQuantity(
+                    itemRequest.getProductId(),
+                    itemRequest.getQuantity());
+            if (affected == 0) {
+                throw new APIException(
+                        "Sản phẩm %s không đủ số lượng".formatted(product.getProductName()));
             }
-            product.setQuantity(product.getQuantity() - itemRequest.getQuantity());
 
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(product);
