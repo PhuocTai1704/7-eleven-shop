@@ -1,5 +1,6 @@
 package com.APIshop.BEShop.payloads.request;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +30,7 @@ public class ProductRequest {
 
     @NotNull(message = "Giảm giá không được để trống")
     @Min(value = 0, message = "Giảm giá tỷ lệ không được nhỏ hơn 0")
+    @Max(value = 100, message = "Giảm giá không được lớn hơn 100")
     private Integer discount;
 
     @NotNull(message = "Trạng thái không được để trống")
