@@ -242,6 +242,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📬 Liên hệ
 
-**[Tên của bạn]** — [email@example.com]
-
 Project Link: [https://github.com/PhuocTai1704/7-eleven-shop-BE](https://github.com/PhuocTai1704/7-eleven-shop-BE)
