@@ -14,7 +14,7 @@ public interface ProductService {
 
     ProductDTO getBySlug(String slug);
 
-    ProductResponse getAll(Long categoryId, Boolean isSale, Boolean status, Integer pageNumber,
+    ProductResponse getAll(String search, Long categoryId, Boolean isSale, Boolean status, Integer pageNumber,
             Integer pageSize, String sortBy, String sortOrder);
 
     ProductDTO create(ProductRequest request, MultipartFile image) throws IOException;

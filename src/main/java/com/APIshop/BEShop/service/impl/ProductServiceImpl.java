@@ -67,14 +67,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getAll(Long categoryId, Boolean isSale, Boolean status, Integer pageNumber,
+    public ProductResponse getAll(String search, Long categoryId, Boolean isSale, Boolean status, Integer pageNumber,
             Integer pageSize, String sortBy,
             String sortOrder) {
         // Select products from database
         Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-        Specification<Product> productSpecification = ProductSpecification.filter(categoryId, isSale, status, false);
+        Specification<Product> productSpecification = ProductSpecification.filter(search, categoryId, isSale, status,
+                false);
 
         if (categoryId != null && !categoryRepo.existsById(categoryId)) {
             throw new ResourceNotFoundException("Danh mục", "Id", categoryId);
