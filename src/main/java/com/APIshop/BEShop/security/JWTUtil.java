@@ -55,7 +55,7 @@ public class JWTUtil {
                 .issuer("Auth")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(15, ChronoUnit.MINUTES).toEpochMilli()))
+                        Instant.now().plus(60, ChronoUnit.MINUTES).toEpochMilli()))
                 .claim("userId", userDTO.getUserId())
                 .claim("scope", buildScope(userDTO))
                 .build();
