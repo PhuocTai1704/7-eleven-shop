@@ -44,7 +44,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductResponse> getAll(
-            @RequestParam(required = false) String sreach,
+            @RequestParam(required = false) String search,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Boolean isSale,
             @RequestParam(required = false) Boolean status,
@@ -52,7 +52,7 @@ public class ProductController {
             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
-        return ResponseEntity.ok(productService.getAll(sreach, categoryId, isSale, status,
+        return ResponseEntity.ok(productService.getAll(search, categoryId, isSale, status,
                 pageNumber == 0 ? pageNumber : pageNumber - 1,
                 pageSize, "id".equals(sortBy) ? "productId" : sortBy,
                 sortOrder));
