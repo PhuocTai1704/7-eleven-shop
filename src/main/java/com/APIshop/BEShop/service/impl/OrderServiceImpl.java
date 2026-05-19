@@ -208,14 +208,14 @@ public class OrderServiceImpl implements OrderService {
         // Get order by orderId from database
         Order order = orderRepo.findById(orderStatusRequest.getOrderId())
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "orderId", orderStatusRequest.getOrderId()));
+        Boolean isAdmin = roles.contains("ADMIN");
 
         // Verify access permission
-        if (!userId.equals(order.getUserId()) && !roles.contains("ADMIN")) {
+        if (!userId.equals(order.getUserId()) && !isAdmin) {
             throw new AccessDeniedException("Bạn không có quyền truy cập đơn hàng này.");
         }
         OrderStatus currentStatus = order.getOrderStatus();
         OrderStatus status = orderStatusRequest.getOrderStatus();
-        Boolean isAdmin = roles.contains("ADMIN");
 
         // Validate transition
         if (!currentStatus.canTransitionTo(status, isAdmin)) {
